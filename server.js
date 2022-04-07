@@ -16,6 +16,8 @@ app.use((req, res, next) => {
 // LLama a las rutas
 app.use(routes);
 
+// errorHandler
+app.use(errorHandler)
 
 app.listen(port, () => {
     console.log(`Servidor corriendo en puerto ${port}`)
