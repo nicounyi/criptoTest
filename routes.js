@@ -2,9 +2,9 @@
 "use strict";
 const express = require('express');
 const routes = express.Router();
+const { getBlocks } = require('./controllers/blocks');
 
-routes.get('/test',(req, res) => {
-    res.send('Test Api');
-});
+routes.get('/blocks', getBlocks);
+
 
 module.exports = routes;
