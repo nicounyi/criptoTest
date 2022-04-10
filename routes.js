@@ -2,9 +2,14 @@
 "use strict";
 const express = require('express');
 const routes = express.Router();
-const { getBlocks } = require('./controllers/blocks');
+const { getLastBlock, getTransaction, getAddress } = require('./controllers/getters');
 
-routes.get('/blocks', getBlocks);
+routes.get('/blocks', getLastBlock);
+
+routes.get('/transaction', getTransaction);
+
+routes.get('/address', getAddress);
+
 
 
 module.exports = routes;
