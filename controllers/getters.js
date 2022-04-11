@@ -47,8 +47,20 @@ const getAddress = async (req, res, next) => {
   }
 };
 
+const getEthPrice = async (req, res, next) => {
+  try {
+    const response = await axios.get(
+      "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD"
+    );
+    res.json(response.data);
+  } catch (err) {
+    console.error(ERROR_MESSAGE);
+  }
+};
+
 module.exports = {
   getLastBlock,
   getTransaction,
   getAddress,
+  getEthPrice
 };
