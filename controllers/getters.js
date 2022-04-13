@@ -25,7 +25,10 @@ const getBlocks = (req, res, next) => {
       if(!lastBlock) {
         res.status(404).send(`${ERROR_MESSAGE} : El bloque no existe`);
       } else {
-        res.json(handleBlock(response));
+        res.status(200).json({
+          message: ('OK'),
+          data: handleBlock(response)
+      });
       }
     })
     .catch((err) => {
