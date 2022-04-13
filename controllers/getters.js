@@ -4,48 +4,57 @@ const axios = require("axios");
 const MAINNET =
   process.env.MAINNET ||
   "https://mainnet.infura.io/v3/d9d423b8893b497d9448bc56e14607be";
+const ADDRESS =
+  process.env.ADDRESS ||
+  "https://api.etherscan.io/api?module=account&action=txlist&address=";
+const APIKEY =
+  process.env.APIKEY ||
+  "SVMBQEM199I7KHBMVYKV8MCZDHGA8CWI2D";
 const ERROR_MESSAGE =
   process.env.ERROR_MESSAGE || "Ocurrió un error inesperado";
 const web3 = new Web3(MAINNET);
 
-const getLastBlock = (req, res, next) => {
+const getBlocks = (req, res, next) => {
+  const blockNumber = req.params.block ? req.params.block : "latest";
+  console.log(blockNumber);
   let lastBlock;
   web3.eth
-    .getBlock("latest")
+    .getBlock(blockNumber)
     .then((response) => {
       lastBlock = response;
       res.json(lastBlock);
     })
     .catch((err) => {
-      console.error(ERROR_MESSAGE, err);
+      res.status(404).send(`${ERROR_MESSAGE} : ${err.message}`);
     });
 };
 
 const getTransaction = (req, res, next) => {
+  const hash = req.params.transaction;
   let transaction;
   web3.eth
     .getTransaction(
-      "0x3bcd86b070c47fff629892c4883cc0ba6f6fe15ffad2404ea4b2aff271a6a606"
+      `${hash}`
     )
     .then((response) => {
       transaction = response;
       res.json(transaction);
     })
     .catch((err) => {
-      console.error(ERROR_MESSAGE, err);
+      res.status(404).send(`${ERROR_MESSAGE} : ${err.message}`);
     });
 };
 
 const getAddress = async (req, res, next) => {
+  const addressHash = req.params.address;
   try {
-    const response = await axios.get(
-      "https://api.etherscan.io/api?module=account&action=txlist&address=0x646db8ffc21e7ddc2b6327448dd9fa560df41087&sort=asc&apikey=SVMBQEM199I7KHBMVYKV8MCZDHGA8CWI2D"
-    );
+    const response = await axios.get(`${ADDRESS}${addressHash}&sort=asc&apikey=${APIKEY}`)
     res.json(response.data.result);
   } catch (err) {
-    console.error(ERROR_MESSAGE);
+    res.status(404).send(`${ERROR_MESSAGE} : ${err.message}`);
   }
 };
+
 
 const getEthPrice = async (req, res, next) => {
   try {
@@ -59,8 +68,8 @@ const getEthPrice = async (req, res, next) => {
 };
 
 module.exports = {
-  getLastBlock,
+  getBlocks,
   getTransaction,
   getAddress,
-  getEthPrice
+  getEthPrice,
 };
