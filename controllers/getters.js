@@ -8,21 +8,25 @@ const ADDRESS =
   process.env.ADDRESS ||
   "https://api.etherscan.io/api?module=account&action=txlist&address=";
 const APIKEY =
-  process.env.APIKEY ||
-  "SVMBQEM199I7KHBMVYKV8MCZDHGA8CWI2D";
+  process.env.APIKEY;
 const ERROR_MESSAGE =
   process.env.ERROR_MESSAGE || "Ocurrió un error inesperado";
 const web3 = new Web3(MAINNET);
+const { handleBlock, handleTransaction } = require('../utils/responseHandler')
+
 
 const getBlocks = (req, res, next) => {
   const blockNumber = req.params.block ? req.params.block : "latest";
-  console.log(blockNumber);
   let lastBlock;
   web3.eth
     .getBlock(blockNumber)
     .then((response) => {
       lastBlock = response;
-      res.json(lastBlock);
+      if(!lastBlock) {
+        res.status(404).send(`${ERROR_MESSAGE} : El bloque no existe`);
+      } else {
+        res.json(handleBlock(response));
+      }
     })
     .catch((err) => {
       res.status(404).send(`${ERROR_MESSAGE} : ${err.message}`);
@@ -38,7 +42,7 @@ const getTransaction = (req, res, next) => {
     )
     .then((response) => {
       transaction = response;
-      res.json(transaction);
+      res.json(handleTransaction(transaction));
     })
     .catch((err) => {
       res.status(404).send(`${ERROR_MESSAGE} : ${err.message}`);
