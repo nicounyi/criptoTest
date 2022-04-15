@@ -45,7 +45,10 @@ const getTransaction = (req, res, next) => {
     )
     .then((response) => {
       transaction = response;
-      res.json(handleTransaction(transaction));
+        res.status(200).json({
+        message: ('OK'),
+        data: handleTransaction(transaction)
+    });
     })
     .catch((err) => {
       res.status(404).send(`${ERROR_MESSAGE} : ${err.message}`);
@@ -56,7 +59,10 @@ const getAddress = async (req, res, next) => {
   const addressHash = req.params.address;
   try {
     const response = await axios.get(`${ADDRESS}${addressHash}&sort=asc&apikey=${APIKEY}`)
-    res.json(response.data.result);
+      res.status(200).json({
+      message: ('OK'),
+      data: response.data.result
+  });
   } catch (err) {
     res.status(404).send(`${ERROR_MESSAGE} : ${err.message}`);
   }
