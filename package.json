@@ -4,6 +4,7 @@
   "description": "Pequeño backend para realizar la logica de negocios",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nicolas Unyicio",
